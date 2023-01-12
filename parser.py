@@ -1,16 +1,25 @@
 import requests
+from bs4 import BeautifulSoup
 import fake_useragent
-url = 'https://www.cabinet.levokumka.net/cabinet'
-user = fake_useragent.Us().
-def login(un, pwd):
-     s = requests.Session()
-     payload = {
-         'LOGIN': un,
-         'PASSWD': pwd,
-     }
-     res = s.post(url, data=payload, allow_redirects=True)
-     lk_profile = 'https://www.cabinet.levokumka.net/cabinet/welcome/'
-     lk = s.get(lk_profile)
-     return lk
+session = requests.Session()
+link = 'https://www.cabinet.levokumka.net/cabinet/'
+user = fake_useragent.UserAgent().random
+header = {
+    'user-agent': user,
 
-print(login('BILL0000139', '5ormvx').text)
+}
+
+data = {
+    'form_sent': '1',
+    'LOGIN': 'BILL0000139',
+    'PASSWD': '5ormvx',
+
+}
+
+responce = session.post(link, data=data, headers=header)
+
+lk_main = 'https://www.cabinet.levokumka.net/cabinet/welcome/'
+
+lk_responce = session.get(lk_main).text
+
+print(lk_responce)
