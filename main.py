@@ -1,5 +1,5 @@
 import telebot
-from parser_selenium import login_form
+from parser_selenium import login_form, request_parser, tarif_parse
 bot = telebot.TeleBot('5911956484:AAFB0YU-9bldYHz4k4XfEaJ1yTqNPbWz00c')
 @bot.message_handler(content_types=['text'])
 def hello_message(message):
@@ -21,7 +21,16 @@ def login_take(message):
 def pwd_take(message, login_take):
     pwd_inp = message.text
     print(pwd_inp)
-    print(login_form(login_take, pwd_inp))
+    cookies = login_form(login_take, pwd_inp)
+    resp = request_parser(cookies)
+    bot.send_message(message.chat.id, f'Добро пожаловать! {login_take}\n Текущий тариф: \n {tarif_parse(resp)[1]}')
 
+'''@bot.message_handler(content_types=['text'])
+def usr_info()    '''
+
+'''@bot.message_handler(content_types=['text'])
+def balance_info(message, login_take, pwd_inp):
+    if message == '/balance':
+        print(balance_parse(login_form(login_take, pwd_inp)))'''
 
 bot.polling(none_stop=True, interval=0)

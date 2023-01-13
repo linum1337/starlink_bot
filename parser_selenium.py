@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 import requests
 import json
+import lxml
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -14,6 +15,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
 from bs4 import BeautifulSoup
 def login_form(login, pwd):
+
     log = str(login)
     pas = str(pwd)
     options = webdriver.ChromeOptions()
@@ -32,11 +34,11 @@ def login_form(login, pwd):
         driver.find_element(By.ID, "login-field").send_keys(log)
         driver.find_element(By.ID, "pass-field").send_keys(Keys.ENTER)
 
-        time.sleep(6)
-        full_page = driver.page_source
-        with open('cabinet.html', 'w') as lk:
-            lk.write(full_page)
-        time.sleep(5)
+        time.sleep(2)
+        cookies = driver.get_cookies()
+        #request_parser(cookies)
+        return cookies
+        #time.sleep(5)
 
 
     except Exception as ex:
@@ -46,3 +48,22 @@ def login_form(login, pwd):
         driver.close()
         driver.quit()
     return 1
+def request_parser(cookies):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0'
+    }
+    requests_cookies = {}
+    for c in cookies:
+        requests_cookies[c['name']] = c['value']
+    responce = requests.get('https://www.cabinet.levokumka.net/cabinet/welcome/', cookies=requests_cookies,
+                            headers=headers)
+
+    #print(responce.text)
+    #balance_parse(responce)
+    return responce
+
+def tarif_parse(responce):
+    soup = BeautifulSoup(responce.text, 'lxml')
+    a = soup.findAll('h4')
+    return a
+#login_form('BILL0000139', '5ormvx')
