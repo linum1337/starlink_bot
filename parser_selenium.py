@@ -34,7 +34,7 @@ def login_form(login, pwd):
         driver.find_element(By.ID, "login-field").send_keys(log)
         driver.find_element(By.ID, "pass-field").send_keys(Keys.ENTER)
 
-        time.sleep(2)
+        time.sleep(4)
         cookies = driver.get_cookies()
         #request_parser(cookies)
         return cookies
@@ -60,10 +60,20 @@ def request_parser(cookies):
 
     #print(responce.text)
     #balance_parse(responce)
-    return responce
+    lic_bill = requests.get('https://www.cabinet.levokumka.net/cabinet/%d0%9b%d0%b8%d1%86%d0%b5%d0%b2%d0%be%d0%b9-%d1%81%d1%87%d0%b5%d1%82/', cookies=requests_cookies,headers=headers)
+    soup_main = BeautifulSoup(responce.text, 'lxml')
+    soup_bill = BeautifulSoup(lic_bill.text,'lxml')
+    return soup_main, soup_bill
 
-def tarif_parse(responce):
-    soup = BeautifulSoup(responce.text, 'lxml')
+def tarif_parse(soup):
+
     a = soup.findAll('h4')
-    return a
+    info = str(a[1])
+    return info[4:-5]
+
+def balance_parse(soup):
+    p = soup.findAll('td')
+    info_p = str(p[3])
+    return info_p[4:-5]
+
 #login_form('BILL0000139', '5ormvx')
