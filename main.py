@@ -5,11 +5,14 @@ bot = telebot.TeleBot('5911956484:AAFB0YU-9bldYHz4k4XfEaJ1yTqNPbWz00c')
 @bot.message_handler(content_types=['text'])
 def hello_message(message):
     if message.text == "/start":
-        print(message.from_user.id)
-        bot.send_message(message.from_user.id, "Добро пожаловать! "
-              "Введите ваш логин или номер телефона, чтобы бот Вас узнал. После этого Вы сможете получать от бота уведомления и другую информацию.")
-        login_msg = bot.send_message(message.chat.id, 'Введите логин:')
-        bot.register_next_step_handler(login_msg, login_take)
+        all_us_inf = user_search(str(message.from_user.id))
+        if all_us_inf[0]:
+            help_info(message, all_us_inf)
+        else:
+            bot.send_message(message.from_user.id, "Добро пожаловать! "
+                  "Введите ваш логин или номер телефона, чтобы бот Вас узнал. После этого Вы сможете получать от бота уведомления и другую информацию.")
+            login_msg = bot.send_message(message.chat.id, 'Введите логин:')
+            bot.register_next_step_handler(login_msg, login_take)
 @bot.message_handler(content_types=['text'])
 def login_take(message):
 
@@ -23,14 +26,24 @@ def login_take(message):
 def pwd_take(message, login_take):
     pwd_inp = message.text
     print(pwd_inp)
-    cookies = login_form(login_take, pwd_inp)
-    soup = request_parser(cookies)
+    after_login = login_in(login_take, pwd_inp)
     bot.send_message(message.chat.id, f'Добро пожаловать! {login_take}\n Текущий тариф: \n {tarif_parse(soup[0])}\n '
                                       f'Текущий баланс: {balance_parse(soup[1])} руб.')
-    #user_add(message.from_user.id, cookies)
-    user_search(message.from_user.id, cookies)
+
+@bot.message_handler(content_types=['text'])
+def help_info(message, all_us_inf):
+    print(1)
+    bot.send_message(message.from_user.id, f'Добро пожаловать {all_us_inf[3]}! Доступные команды:')
+    login_in(all_us_inf[3], all_us_inf[4])
 
 
+def login_in(login, pwd):
+    cookies = login_form(login, pwd)
+    soup = request_parser(cookies)
+    return cookies, soup
+
+'''@bot.message_handler(content_types=['text'])
+def short_inf(message)'''
 '''@bot.message_handler(content_types=['text'])
 def usr_info()    '''
 

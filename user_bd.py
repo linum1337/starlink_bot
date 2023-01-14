@@ -1,18 +1,24 @@
 import sqlite3
 
-def user_add(id, cookie):
+def user_add(id, cookie, login, pwd):
     con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
     cursor = con.cursor()
-    sqlite_insertion = """INSERT INTO user_data (user_id, cookie) VALUES (?, ?)"""
-    insertion_data = (str(id), str(cookie))
+    sqlite_insertion = """INSERT INTO user_data (user_id, cookie, login, pwd) VALUES (?, ?, ?, ?)"""
+    insertion_data = (str(id), str(cookie), str(login), str(pwd))
     cursor.execute(sqlite_insertion, insertion_data)
     con.commit()
     cursor.close()
 
-def user_search(id, cookie):
+def user_search(id):
     con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
     cursor = con.cursor()
-    bd_parse =cursor.execute(""" SELECT * FROM * """)
-    print(bd_parse)
+    get_all = """SELECT * FROM user_data"""
+    cursor.execute(get_all)
+    us_dat = cursor.fetchall()
     con.commit()
     cursor.close()
+    for i in us_dat:
+        print(i)
+        if id in i:
+            return (True, i[0], i[1], i[2], i[3])
+    return False
