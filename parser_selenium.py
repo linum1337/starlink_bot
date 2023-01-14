@@ -14,7 +14,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
 from bs4 import BeautifulSoup
-def login_form(login, pwd):
+
+def login_form(login, pwd): #Проход логина, сохранение куки
 
     log = str(login)
     pas = str(pwd)
@@ -48,7 +49,7 @@ def login_form(login, pwd):
         driver.close()
         driver.quit()
     return 1
-def request_parser(cookies):
+def request_parser(cookies):  #Преобразование полученых страниц для дальшнейшего прасинга
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0'
     }
@@ -60,20 +61,26 @@ def request_parser(cookies):
 
     #print(responce.text)
     #balance_parse(responce)
+    services = requests.get('https://www.cabinet.levokumka.net/cabinet/%d1%83%d0%bf%d1%80%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d1%83%d1%81%d0%bb%d1%83%d0%b3%d0%b0%d0%bc%d0%b8/', cookies=requests_cookies, headers=headers)
     lic_bill = requests.get('https://www.cabinet.levokumka.net/cabinet/%d0%9b%d0%b8%d1%86%d0%b5%d0%b2%d0%be%d0%b9-%d1%81%d1%87%d0%b5%d1%82/', cookies=requests_cookies,headers=headers)
     soup_main = BeautifulSoup(responce.text, 'lxml')
     soup_bill = BeautifulSoup(lic_bill.text,'lxml')
-    return soup_main, soup_bill
+    soup_services = BeautifulSoup(services.text, 'lxml')
+    return soup_main, soup_bill, soup_services      #Возвращение преобразованных страниц
 
-def tarif_parse(soup):
+def tarif_parse(soup): #Получение текущего тарифа
 
     a = soup.findAll('h4')
     info = str(a[1])
     return info[4:-5]
 
-def balance_parse(soup):
+def balance_parse(soup): #Получение текущего баланса
     p = soup.findAll('td')
     info_p = str(p[3])
     return info_p[4:-5]
+
+def req_payment_parse(soup): #получение обещанного платежа
+    td = soup.findAll('i')
+    return td
 
 #login_form('BILL0000139', '5ormvx')
