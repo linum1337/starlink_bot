@@ -72,6 +72,7 @@ def tarif_parse(soup): #Получение текущего тарифа
 
     a = soup.findAll('h4')
     info = str(a[1])
+    print(info)
     return info[4:-5]
 
 def balance_parse(soup): #Получение текущего баланса
@@ -83,4 +84,7 @@ def req_payment_parse(soup): #получение обещанного плате
     td = soup.findAll('i')
     return td
 
+def req_payment_ryl(soup):
+    p_r = soup.findAll('p')
+    print(p_r)
 #login_form('BILL0000139', '5ormvx')
