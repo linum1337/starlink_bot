@@ -87,4 +87,51 @@ def req_payment_parse(soup): #получение обещанного плате
 def req_payment_ryl(soup):
     p_r = soup.findAll('p')
     print(p_r)
+
+def helpdesk_sender(cookies):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0'
+    }
+    payload = {
+
+        'subject': 'Тест',
+        'message': 'Тест',
+        'module_token_unique': 'bc8daa48718fc3d921fdbd4ee7e1a8f4887',
+        'module_token': 'bc8daa48718fc3d921fdbd4ee7e1a8f4',
+
+    }
+    requests_cookies = {}
+    print(cookies)
+    for c in cookies:
+        requests_cookies[c['name']] = c['value']
+    print(requests_cookies)
+    #log = str(login)
+    #pas = str(pwd)
+    options = webdriver.ChromeOptions()
+    options.add_argument("user-agent=Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0")
+    url = "https://www.cabinet.levokumka.net/cabinet/"
+    driver = webdriver.Chrome(
+        executable_path="/Users/vladislavcehov/PycharmProjects/starlink_bot/chromedriver",
+        options=options,
+    )
+    try:
+        driver.get("https://www.cabinet.levokumka.net/cabinet/welcome/")
+        driver.add_cookie(requests_cookies)
+        driver.get("https://www.cabinet.levokumka.net/cabinet/welcome/")
+        driver.set_window_size(1440, 818)
+        time.sleep(5)
+        driver.find_element(By.CSS_SELECTOR, ".col-xs-15:nth-child(1)").click()
+        driver.find_element(By.ID, "subject").click()
+        driver.find_element(By.ID, "subject").send_keys("dsf")
+        driver.find_element(By.ID, "message_helpdesk").click()
+        driver.find_element(By.ID, "message_helpdesk").send_keys("sdags")
+        driver.find_element(By.CSS_SELECTOR, ".modal-footer > .btn-primary").click()
+    except Exception as ex:
+        return ex
+
+    finally:
+        driver.close()
+        driver.quit()
+
+    return True
 #login_form('BILL0000139', '5ormvx')
