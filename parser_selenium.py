@@ -13,19 +13,30 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
+
+
 from bs4 import BeautifulSoup
 
 def login_form(login, pwd): #Проход логина, сохранение куки
 
     log = str(login)
     pas = str(pwd)
-    options = webdriver.ChromeOptions()
+    options = Options()
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
     options.add_argument("user-agent=Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0")
+
+
     url = "https://www.cabinet.levokumka.net/cabinet/"
-    driver = webdriver.Chrome(
-        executable_path="/Users/vladislavcehov/PycharmProjects/starlink_bot/chromedriver",
-        options=options,
-    )
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
 
