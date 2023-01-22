@@ -1,7 +1,7 @@
 import sqlite3
 
 def user_add(id, cookie, login, pwd):
-    con = sqlite3.connect('/home/guest/starlink_bot/user_cookie.db')
+    con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
     cursor = con.cursor()
     sqlite_insertion = """INSERT INTO user_data (user_id, cookie, login, pwd) VALUES (?, ?, ?, ?)"""
     insertion_data = (str(id), str(cookie), str(login), str(pwd))
@@ -10,15 +10,16 @@ def user_add(id, cookie, login, pwd):
     cursor.close()
 
 def user_search(id):
-    con = sqlite3.connect('/home/guest/starlink_bot/user_cookie.db')
+    con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
     cursor = con.cursor()
     get_all = """SELECT * FROM user_data"""
     cursor.execute(get_all)
     us_dat = cursor.fetchall()
     con.commit()
     cursor.close()
-    for i in us_dat:
-        print(i)
-        if id in i:
-            return (True, i[0], i[1], i[2], i[3])
-    return False
+    if len(us_dat) != 0:
+        for i in us_dat:
+            print(i)
+            if id in i:
+                return (True, i[0], i[1], i[2], i[3])
+    return (False, 'fuck it')
