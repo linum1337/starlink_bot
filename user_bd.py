@@ -1,7 +1,7 @@
 import sqlite3
-
+bd_location = '/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db'
 def user_add(id, cookie, login, pwd):
-    con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
+    con = sqlite3.connect(bd_location)
     cursor = con.cursor()
     sqlite_insertion = """INSERT INTO user_data (user_id, cookie, login, pwd) VALUES (?, ?, ?, ?)"""
     insertion_data = (str(id), str(cookie), str(login), str(pwd))
@@ -10,7 +10,7 @@ def user_add(id, cookie, login, pwd):
     cursor.close()
 
 def user_search(id):
-    con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
+    con = sqlite3.connect(bd_location)
     cursor = con.cursor()
     get_all = """SELECT * FROM user_data"""
     cursor.execute(get_all)
@@ -25,7 +25,7 @@ def user_search(id):
     return (False, 'fuck it', 1, 1)
 
 def delete_user(id):
-    con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
+    con = sqlite3.connect(bd_location)
     cursor = con.cursor()
     get_all = """DELETE FROM user_data WHERE user_id=(?)"""
     insertion = str(id)
