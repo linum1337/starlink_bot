@@ -12,6 +12,9 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 from bs4 import BeautifulSoup
 
@@ -20,12 +23,15 @@ def login_form(login, pwd): #Проход логина, сохранение к�
     log = str(login)
     pas = str(pwd)
     options = webdriver.ChromeOptions()
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+
     options.add_argument("user-agent=Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0")
     url = "https://www.cabinet.levokumka.net/cabinet/"
-    driver = webdriver.Chrome(
-        executable_path="/chromedriver",
-        options=options,
-    )
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
 
