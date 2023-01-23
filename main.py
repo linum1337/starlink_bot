@@ -100,6 +100,7 @@ def al(message):
         bot.send_message(message.chat.id,
                          f'Доступные команды:\n {commands_list[0]} - подключенные услуги \n {commands_list[1]} - справка \n {commands_list[2]} - текущий баланс \n {commands_list[3]} - текущий тариф \n {commands_list[4]}')
     elif message.text == 'Подключенные услуги':
+        bot.send_message(message.from_user.id, 'Выполняем запрос')
         print(all_us_inf)
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
         services_parsed = req_payment_parse(aft_inf[1][2])
@@ -107,6 +108,7 @@ def al(message):
         bot.send_message(message.from_user.id,
                          f'Подключенные услуги: \n {str(services_parsed[2])[3: -4]} \n {str(services_parsed[3])[3: -4]} \n {str(services_parsed[4])[3: -4]} \n {str(services_parsed[5])[3: -4]} ')
     elif message.text == 'Текущий баланс':
+        bot.send_message(message.from_user.id, 'Выполняем запрос')
         all_us_inf = user_search(str(message.from_user.id))
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
         services_parsed = balance_parse(aft_inf[1][1])
@@ -114,7 +116,7 @@ def al(message):
         bot.send_message(message.from_user.id, f'Текущий баланс: {services_parsed} руб.')
 
     elif message.text == 'Текущий тариф':
-        
+        bot.send_message(message.from_user.id, 'Выполняем запрос')
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
         services_parsed = tarif_parse(aft_inf[1][0])
         print(services_parsed)
@@ -122,7 +124,7 @@ def al(message):
 
     elif message.text == 'Выйти из профиля':
         delete_user(message.chat.id)
-
+        bot.send_message(message.from_user.id, 'Вы вышли из профиля')
 
 '''@bot.message_handler(commands=['helpdesk'])
 def helpdesk(message):
