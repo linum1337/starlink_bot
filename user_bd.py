@@ -22,4 +22,15 @@ def user_search(id):
             print(i)
             if id in i:
                 return (True, i[0], i[1], i[2], i[3])
-    return (False, 'fuck it')
+    return (False, 'fuck it', 1, 1)
+
+def delete_user(id):
+    con = sqlite3.connect('/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db')
+    cursor = con.cursor()
+    get_all = """DELETE FROM user_data WHERE user_id=(?)"""
+    insertion = str(id)
+    print(insertion)
+    cursor.execute(get_all, (insertion, ))
+    us_dat = cursor.fetchall()
+    con.commit()
+    cursor.close()

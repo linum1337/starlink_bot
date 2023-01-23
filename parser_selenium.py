@@ -42,13 +42,12 @@ def login_form(login, pwd): #Проход логина, сохранение к�
         #time.sleep(5)
 
 
-    except Exception as ex:
-        return ex
+    except:
+        return 0
 
     finally:
         driver.close()
         driver.quit()
-    return 1
 def request_parser(cookies):  #Преобразование полученых страниц для дальшнейшего прасинга
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0'
@@ -128,6 +127,7 @@ def helpdesk_sender(cookies):
         driver.find_element(By.CSS_SELECTOR, ".modal-footer > .btn-primary").click()
     except Exception as ex:
         return ex
+
 
     finally:
         driver.close()
