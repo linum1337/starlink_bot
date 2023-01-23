@@ -64,10 +64,7 @@ def pwd_take(message, login_take):
     pwd_inp = message.text
     print(pwd_inp.upper)
     cookies = login_form(login_take, pwd_inp)
-    if cookies == 0:
-        bot.send_message(message.from_user.id, 'Данные не верны, повторите попытку')
-        hello_message()
-
+    user_add(message.from_user.id, cookies, login_take, pwd_inp)
     resp = request_parser(cookies)
     bot.send_message(message.chat.id, f'Добро пожаловать! {login_take}')
     keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
@@ -87,7 +84,7 @@ def pwd_take(message, login_take):
 
     soup = request_parser(cookies)
 
-    user_add(message.from_user.id, cookies, login_take, pwd_inp)
+
     global all_us_inf
     all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
 
@@ -103,6 +100,7 @@ def al(message):
         bot.send_message(message.from_user.id, 'Выполняем запрос')
         print(all_us_inf)
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
+        print(aft_inf)
         services_parsed = req_payment_parse(aft_inf[1][2])[2::]
         print(services_parsed)
         displ = ''
