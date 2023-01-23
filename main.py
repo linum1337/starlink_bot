@@ -8,6 +8,8 @@ from parser_selenium import login_form, request_parser, tarif_parse, balance_par
 bot = telebot.TeleBot('5911956484:AAFB0YU-9bldYHz4k4XfEaJ1yTqNPbWz00c')
 commands_list = ['/services', '/help', '/balance', '/plan', '/helpdesk']
 all_us_inf = 0
+
+
 def help_info(message, all_us_inf):
     all_us_inf = all_us_inf
     print(1)
@@ -18,7 +20,6 @@ def login_in(login, pwd):
     cookies = login_form(login, pwd)
     soup = request_parser(cookies)
     return cookies, soup
-
 
 
 @bot.message_handler(content_types=['text'], commands=['start'])
@@ -91,7 +92,6 @@ def pwd_take(message, login_take):
     all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
 
 
-
 @bot.message_handler(content_types=['text'])
 def al(message):
     global all_us_inf
@@ -103,10 +103,14 @@ def al(message):
         bot.send_message(message.from_user.id, 'Выполняем запрос')
         print(all_us_inf)
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-        services_parsed = req_payment_parse(aft_inf[1][2])
+        services_parsed = req_payment_parse(aft_inf[1][2])[2::]
         print(services_parsed)
+        displ = ''
+        for i in services_parsed:
+            displ = displ + '\n' + str(str(str(i).split('<i>')[1]).split('</i>')[0])
         bot.send_message(message.from_user.id,
-                         f'Подключенные услуги: \n {str(services_parsed[2])[3: -4]} \n {str(services_parsed[3])[3: -4]} \n {str(services_parsed[4])[3: -4]} \n {str(services_parsed[5])[3: -4]} ')
+                         f'Подключенные услуги: {displ} ')
+
     elif message.text == 'Текущий баланс':
         bot.send_message(message.from_user.id, 'Выполняем запрос')
         all_us_inf = user_search(str(message.from_user.id))
@@ -125,6 +129,7 @@ def al(message):
     elif message.text == 'Выйти из профиля':
         delete_user(message.chat.id)
         bot.send_message(message.from_user.id, 'Вы вышли из профиля')
+
 
 '''@bot.message_handler(commands=['helpdesk'])
 def helpdesk(message):
@@ -185,6 +190,5 @@ def req_pay(message):
 
 
 '''
-
 
 bot.polling()

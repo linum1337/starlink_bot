@@ -1,5 +1,5 @@
 import sqlite3
-bd_location = '/home/guest/starlink_bot/user_cookie.db'
+bd_location = '/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db'
 def user_add(id, cookie, login, pwd):
     con = sqlite3.connect(bd_location)
     cursor = con.cursor()
