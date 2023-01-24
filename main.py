@@ -23,7 +23,7 @@ def login_in(login, pwd):
 
 
 @bot.message_handler(content_types=['text'], commands=['start'])
-def hello_message(message):
+def hello_message(message, another_try=1):
     # if message.text == "/start":
     global all_us_inf
     all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
@@ -45,48 +45,59 @@ def hello_message(message):
                          reply_markup=keyboard)
 
         help_info(message, all_us_inf)
-    else:
+    elif (all_us_inf[0] == False) and (another_try == 1):
         print(message.from_user.id)
         bot.send_message(message.from_user.id, "Добро пожаловать! "
                                                "Введите ваш логин или номер телефона, чтобы бот Вас узнал. После этого Вы сможете получать от бота уведомления и другую информацию.")
         login_msg = bot.send_message(message.chat.id, 'Введите логин:')
         bot.register_next_step_handler(login_msg, login_take)
+    elif (all_us_inf[0] == False) and (another_try == 0):
+        login_msg = bot.send_message(message.chat.id, 'Введите логин:')
+        bot.register_next_step_handler(login_msg, login_take)
 
 
 def login_take(message):
-    login_take = message.text.upper()
-    print(login_take.upper())
+    login_tak = message.text.upper()
+    print(login_tak.upper())
     pwd_ask = bot.send_message(message.chat.id, 'Введите пароль:')
-    bot.register_next_step_handler(pwd_ask, pwd_take, login_take)
+    bot.register_next_step_handler(pwd_ask, pwd_take, login_tak)
 
 
 def pwd_take(message, login_take):
     pwd_inp = message.text
     print(pwd_inp.upper)
+    final_login(message, pwd_inp, login_take)
+
+def final_login(message, pwd_inp, login_take):
+
     cookies = login_form(login_take, pwd_inp)
-    user_add(message.from_user.id, cookies, login_take, pwd_inp)
-    resp = request_parser(cookies)
-    bot.send_message(message.chat.id, f'Добро пожаловать! {login_take}')
-    keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
-    advice = types.KeyboardButton(text='Справка')
-    keyboard.add(advice)
-    serv = types.KeyboardButton(text='Подключенные услуги')
-    keyboard.add(serv)
-    bill = types.KeyboardButton(text='Текущий баланс')
-    keyboard.add(bill)
-    paln_btn = types.KeyboardButton(text='Текущий тариф')
-    keyboard.add(paln_btn)
-    exit_btn = types.KeyboardButton(text='Выйти из профиля')
-    keyboard.add(exit_btn)
-    bot.send_message(message.from_user.id,
-                     'Этот бот работает в тестовом режиме, при сбоях писать на почту: osgaming47@gmail.com',
-                     reply_markup=keyboard)
+    if cookies == False:
+        bot.send_message(message.from_user.id, 'Введите логин и пароль еще раз')
+        hello_message(message, 0)
+    else:
+        user_add(message.from_user.id, cookies, login_take, pwd_inp)
+        resp = request_parser(cookies)
+        bot.send_message(message.chat.id, f'Добро пожаловать! {login_take}')
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        advice = types.KeyboardButton(text='Справка')
+        keyboard.add(advice)
+        serv = types.KeyboardButton(text='Подключенные услуги')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф')
+        keyboard.add(paln_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля')
+        keyboard.add(exit_btn)
+        bot.send_message(message.from_user.id,
+                         'Этот бот работает в тестовом режиме, при сбоях писать на почту: osgaming47@gmail.com',
+                         reply_markup=keyboard)
 
-    soup = request_parser(cookies)
+        soup = request_parser(cookies)
 
 
-    global all_us_inf
-    all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
+        global all_us_inf
+        all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
 
 
 @bot.message_handler(content_types=['text'])
