@@ -1,4 +1,5 @@
 import telebot
+import emoji
 from telebot import types
 from user_bd import user_add, user_search, delete_user
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -13,7 +14,7 @@ all_us_inf = 0
 def help_info(message, all_us_inf):
     all_us_inf = all_us_inf
     print(1)
-    bot.send_message(message.from_user.id, f'Добро пожаловать {all_us_inf[3]}! Для справки воспользуйтесь /help')
+    bot.send_message(message.from_user.id, f'Добро пожаловать {all_us_inf[3]}!')
 
 
 def login_in(login, pwd):
@@ -30,15 +31,15 @@ def hello_message(message, another_try=1):
     if all_us_inf[0]:  # Проверка на наличие юзера в бд
 
         keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
-        advice = types.KeyboardButton(text='Справка')
+        advice = types.KeyboardButton(text='Справка \U0001f4d6')
         keyboard.add(advice)
-        serv = types.KeyboardButton(text='Подключенные услуги')
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
         keyboard.add(serv)
-        bill = types.KeyboardButton(text='Текущий баланс')
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
         keyboard.add(bill)
-        paln_btn = types.KeyboardButton(text='Текущий тариф')
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
-        exit_btn = types.KeyboardButton(text='Выйти из профиля')
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
         keyboard.add(exit_btn)
         bot.send_message(message.from_user.id,
                          'Этот бот работает в тестовом режиме, при сбоях писать на почту: osgaming47@gmail.com',
