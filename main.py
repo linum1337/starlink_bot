@@ -1,5 +1,4 @@
 import telebot
-import emoji
 from telebot import types
 from user_bd import user_add, user_search, delete_user
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -105,10 +104,10 @@ def final_login(message, pwd_inp, login_take):
 def al(message):
     global all_us_inf
     all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
-    if message.text == 'Справка':
+    if message.text == 'Справка \U0001f4d6':
         bot.send_message(message.chat.id,
                          f'Доступные команды:\n {commands_list[0]} - подключенные услуги \n {commands_list[1]} - справка \n {commands_list[2]} - текущий баланс \n {commands_list[3]} - текущий тариф \n {commands_list[4]}')
-    elif message.text == 'Подключенные услуги':
+    elif message.text == 'Подключенные услуги \U0001f202\uFE0F':
         bot.send_message(message.from_user.id, 'Выполняем запрос')
         print(all_us_inf)
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
@@ -121,7 +120,7 @@ def al(message):
         bot.send_message(message.from_user.id,
                          f'Подключенные услуги: {displ} ')
 
-    elif message.text == 'Текущий баланс':
+    elif message.text == 'Текущий баланс \U0001f4b0':
         bot.send_message(message.from_user.id, 'Выполняем запрос')
         all_us_inf = user_search(str(message.from_user.id))
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
@@ -129,14 +128,14 @@ def al(message):
         print(services_parsed)
         bot.send_message(message.from_user.id, f'Текущий баланс: {services_parsed} руб.')
 
-    elif message.text == 'Текущий тариф':
+    elif message.text == 'Текущий тариф \U0001f310':
         bot.send_message(message.from_user.id, 'Выполняем запрос')
         aft_inf = login_in(all_us_inf[3], all_us_inf[4])
         services_parsed = tarif_parse(aft_inf[1][0])
         print(services_parsed)
         bot.send_message(message.from_user.id, f'Текущий тариф: {services_parsed}')
 
-    elif message.text == 'Выйти из профиля':
+    elif message.text == 'Выйти из профиля \U0001f6aa':
         delete_user(message.chat.id)
         bot.send_message(message.from_user.id, 'Вы вышли из профиля')
 
