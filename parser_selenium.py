@@ -42,7 +42,7 @@ def login_form(login, pwd): #Проход логина, сохранение к�
         driver.find_element(By.ID, "pass-field").send_keys(Keys.ENTER)
         driver.find_element(By.CSS_SELECTOR, ".actions:nth-child(3) > .btn").click()
 
-        time.sleep(4)
+        time.sleep(1)
         cookies = driver.get_cookies()
         #request_parser(cookies)
         return cookies
