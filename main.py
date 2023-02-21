@@ -4,7 +4,7 @@ from user_bd import user_add, user_search, delete_user
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from parser_selenium import login_form, request_parser, tarif_parse, balance_parse, req_payment_parse, req_payment_ryl, \
     helpdesk_sender
-
+from qr_generator import qr_generator
 bot = telebot.TeleBot('5911956484:AAFB0YU-9bldYHz4k4XfEaJ1yTqNPbWz00c')
 commands_list = ['/services', '/help', '/balance', '/plan', '/helpdesk']
 all_us_inf = 0
@@ -40,6 +40,8 @@ def hello_message(message, another_try=1):
         keyboard.add(paln_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
         keyboard.add(exit_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
         bot.send_message(message.from_user.id,
                          'Этот бот работает в тестовом режиме, при сбоях писать на почту: osgaming47@gmail.com',
                          reply_markup=keyboard)
@@ -89,6 +91,8 @@ def final_login(message, pwd_inp, login_take):
         keyboard.add(paln_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
         keyboard.add(exit_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
         bot.send_message(message.from_user.id,
                          'Этот бот работает в тестовом режиме, при сбоях писать на почту: osgaming47@gmail.com',
                          reply_markup=keyboard)
@@ -119,7 +123,10 @@ def al(message):
             displ = displ + '\n' + str(str(str(i).split('<i>')[1]).split('</i>')[0])
         bot.send_message(message.from_user.id,
                          f'Подключенные услуги: {displ} ')
-
+    elif message.text == 'QR':
+        qr_generator(all_us_inf)
+        photo = open('test1.png', 'rb')
+        bot.send_photo(message.from_user.id, photo)
     elif message.text == 'Текущий баланс \U0001f4b0':
         bot.send_message(message.from_user.id, 'Выполняем запрос')
         all_us_inf = user_search(str(message.from_user.id))

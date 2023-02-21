@@ -81,6 +81,9 @@ def tarif_parse(soup): #Получение текущего тарифа
     print(info)
     return info[4:-5]
 
+def client_parse(soup):
+    p = soup.findAll('p')
+    return p
 def balance_parse(soup): #Получение текущего баланса
     p = soup.findAll('td')
     info_p = str(p[3])
@@ -90,6 +93,10 @@ def req_payment_parse(soup): #получение обещанного плате
     td = soup.findAll('i')
     return td
 
+
+def lic_parse(soup):
+    td = soup.findAll('td')
+    return td
 def req_payment_ryl(soup):
     p_r = soup.findAll('p')
     print(p_r)
