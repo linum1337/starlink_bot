@@ -8,7 +8,8 @@ from qr_generator import qr_generator
 bot = telebot.TeleBot('5911956484:AAFB0YU-9bldYHz4k4XfEaJ1yTqNPbWz00c')
 commands_list = ['/services', '/help', '/balance', '/plan', '/helpdesk']
 all_us_inf = 0
-
+abonent_id = 0
+import rest_class
 
 def help_info(message, all_us_inf):
     all_us_inf = all_us_inf
@@ -80,6 +81,9 @@ def final_login(message, pwd_inp, login_take):
         user_add(message.from_user.id, cookies, login_take, pwd_inp)
         resp = request_parser(cookies)
         bot.send_message(message.chat.id, f'Добро пожаловать! {login_take}')
+        global abonent_id
+        abonent_id = rest_class.abon_id(login_take)
+        push_tg = rest_class.tg_id(abonent_id, message.chat.id)
         keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
         advice = types.KeyboardButton(text='Справка \U0001f4d6')
         keyboard.add(advice)
@@ -112,35 +116,26 @@ def al(message):
         bot.send_message(message.chat.id,
                          f'Доступные команды:\n {commands_list[0]} - подключенные услуги \n {commands_list[1]} - справка \n {commands_list[2]} - текущий баланс \n {commands_list[3]} - текущий тариф \n {commands_list[4]}')
     elif message.text == 'Подключенные услуги \U0001f202\uFE0F':
-        bot.send_message(message.from_user.id, 'Выполняем запрос')
-        print(all_us_inf)
-        aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-        print(aft_inf)
-        services_parsed = req_payment_parse(aft_inf[1][2])[2::]
-        print(services_parsed)
-        displ = ''
-        for i in services_parsed:
-            displ = displ + '\n' + str(str(str(i).split('<i>')[1]).split('</i>')[0])
+        abonent_id = rest_class.abon_id(all_us_inf[3])
+        displ = rest_class.abon_usluga(abonent_id)
+        print(abonent_id)
+        displ = '\n'.join(displ)
         bot.send_message(message.from_user.id,
-                         f'Подключенные услуги: {displ} ')
+                         f'Подключенные услуги:\n{displ} ')
+        print(all_us_inf[3])
     elif message.text == 'QR':
         qr_generator(all_us_inf)
         photo = open('test1.png', 'rb')
         bot.send_photo(message.from_user.id, photo)
     elif message.text == 'Текущий баланс \U0001f4b0':
-        bot.send_message(message.from_user.id, 'Выполняем запрос')
-        all_us_inf = user_search(str(message.from_user.id))
-        aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-        services_parsed = balance_parse(aft_inf[1][1])
-        print(services_parsed)
-        bot.send_message(message.from_user.id, f'Текущий баланс: {services_parsed} руб.')
+        abonent_id = rest_class.abon_id(all_us_inf[3])
+        displ = rest_class.abon_balance(abonent_id)
+        bot.send_message(message.from_user.id, f'Текущий баланс: {displ} руб.')
 
     elif message.text == 'Текущий тариф \U0001f310':
-        bot.send_message(message.from_user.id, 'Выполняем запрос')
-        aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-        services_parsed = tarif_parse(aft_inf[1][0])
-        print(services_parsed)
-        bot.send_message(message.from_user.id, f'Текущий тариф: {services_parsed}')
+        abonent_id = rest_class.abon_id(all_us_inf[3])
+        displ = rest_class.abon_tarif(abonent_id)
+        bot.send_message(message.from_user.id, f'Текущий тариф: {displ}')
 
     elif message.text == 'Выйти из профиля \U0001f6aa':
         delete_user(message.chat.id)
