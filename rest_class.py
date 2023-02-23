@@ -2,7 +2,7 @@
 
 import requests
 ip_out = '85.26.197.246:8082'
-ip_inner = '100.64.0.84:8082'
+ip_inner = '85.26.197.246:8082'
 def tg_id(abonent_id, tg):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
