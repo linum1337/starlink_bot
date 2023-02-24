@@ -1,20 +1,16 @@
 import qrcode
 import parser_selenium
+import rest_class
 from datetime import datetime
 def qr_generator(data):
-       parsed = parser_selenium.request_parser(parser_selenium.login_form(data[3], data[4]))
-       lic = parser_selenium.lic_parse(parsed[1])[1]
-       lic = str(str(str(lic).split('<td>')[1]).split('</td>')[0])
-       dogovor = parser_selenium.lic_parse(parsed[1])[5]
-       dogovor = str(str(str(dogovor).split('<td>')[1]).split('</td>')[0])
-       client = parser_selenium.client_parse(parsed[0])[0]
-       client = " ".join(str(str(str(client).split('<p class="no-margin">')[1]).split('</p>')[0]).split())
+       abonent_id = rest_class.abon_id(data[3])
+       client = rest_class.abon_street(abonent_id)
        metadata = datetime.now().date()
        print(metadata)
-       data = f"Дата создания: {metadata} \n" \
-              f"Номер лицевого счёта: {lic} \n" \
-              f"Договор: {dogovor} \n" \
+       data = f"Дата создания: {metadata} \n"  \
+              f"Договор: {data[3]} \n" \
               f"Абонент: \n {client}"
 
        img = qrcode.make(data)
        img.save("test1.png")
+

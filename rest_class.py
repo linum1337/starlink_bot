@@ -10,7 +10,7 @@ def tg_id(abonent_id, tg):
 
     data = 'method1=objects.create&arg1={"abonent_id":"' + str(abonent_id) + '","attribute_id":"1012","attribute_value":"'+ str(tg) + '"}'
 
-    response = requests.post('http://' + ip_inner + ':8082:8082/rest_api/v2/AttributeValues/', headers=headers, data=data)
+    response = requests.post('http://' + ip_inner + '/rest_api/v2/AttributeValues/', headers=headers, data=data)
     print(response)
 
 
@@ -47,6 +47,16 @@ def abon_tarif(abon_id):
     response_for_tarif = requests.post('http://' + ip_inner + '/rest_api/v2/Tarif/', headers=headers, data=data_for_tarif).json()
     return response_for_tarif['result']['fields']['name']
 
+def abon_street(abon_id):
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+
+    data = 'method1=objects.get&arg1={"id":"' + str(abon_id) + '"}&fields=["name"]'
+
+    response = requests.post('http://' + ip_inner + '/rest_api/v2/Abonents/', headers=headers, data=data).json()
+
+    return response['result']['fields']['name']
 def abon_usluga(abon_id):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -61,6 +71,7 @@ def abon_usluga(abon_id):
         uslugi.append(response[i]['fields']['usluga']['fields']['name'])
     return uslugi
 
+
 id = abon_id("BILL0000139")
-print(abon_usluga(str(id)))
+print(abon_street(str(id)))
 
