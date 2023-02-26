@@ -1,6 +1,6 @@
 import sqlite3
-bd_location = '/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db'
-#bd_location = 'home/guest/starlink_bot/user_cookie.db'
+#bd_location = '/Users/vladislavcehov/PycharmProjects/starlink_bot/user_cookie.db'
+bd_location = '/home/guest/starlink_bot/user_cookie.db'
 def user_add(id, cookie, login, pwd):
     con = sqlite3.connect(bd_location)
     cursor = con.cursor()
@@ -20,7 +20,6 @@ def user_search(id):
     cursor.close()
     if len(us_dat) != 0:
         for i in us_dat:
-            print(i)
             if id in i:
                 return (True, i[0], i[1], i[2], i[3])
     return (False, 'fuck it', 1, 1)
