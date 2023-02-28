@@ -32,6 +32,7 @@ import schedule
 
 
 def mail(login, message):
+    print(login, 'info for mail')
     sms = mail_parse.mail_parse(login)
     # print(sms)
     if len(sms) != 0:
@@ -148,28 +149,15 @@ def al(message):
     global all_us_inf
 
     all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
+    if all_us_inf[5] == 1:
+        login = all_us_inf[3]
+        Thread(target=scheduler, args=(login, message,)).start()
+        print(1)
 
     if message.text == 'Справка \U0001f4d6':
         bot.send_message(message.chat.id,
                          f'Доступные команды:\n {commands_list[0]} - подключенные услуги \n {commands_list[1]} - справка \n {commands_list[2]} - текущий баланс \n {commands_list[3]} - текущий тариф \n {commands_list[4]}')
-    elif message.text == 'Включить уведомления \U0001f6ce\uFE0F':
-        login = all_us_inf[3]
-        Thread(target=scheduler, args=(login, message,)).start()
-        print(1)
-        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
-        advice = types.KeyboardButton(text='Справка \U0001f4d6')
-        keyboard.add(advice)
-        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
-        keyboard.add(serv)
-        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
-        keyboard.add(bill)
-        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
-        keyboard.add(paln_btn)
-        qr_btn = types.KeyboardButton(text='QR')
-        keyboard.add(qr_btn)
-        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
-        keyboard.add(exit_btn)
-        bot.send_message(message.chat.id, 'Уведомления включены!', reply_markup=keyboard)
+
 
 
     elif message.text == 'Подключенные услуги \U0001f202\uFE0F':
@@ -199,69 +187,5 @@ def al(message):
         delete_user(message.chat.id)
         bot.send_message(message.from_user.id, 'Вы вышли из профиля')
 
-
-'''@bot.message_handler(commands=['helpdesk'])
-def helpdesk(message):
-    all_us_inf = user_search(str(message.from_user.id))
-    cookies = login_form(all_us_inf[3], all_us_inf[4])
-    a = helpdesk_sender(cookies)
-    if a:
-        bot.send_message(message.from_user.id, "Запрос отправлен")
-'''
-'''
-@bot.message_handler(content_types=['text'])
-def help(message):
-    if message.text == 'Справка':
-        bot.send_message(message.chat.id,
-                         f'Доступные команды:\n {commands_list[0]} - подключенные услуги \n {commands_list[1]} - справка \n {commands_list[2]} - текущий баланс \n {commands_list[3]} - текущий тариф \n {commands_list[4]}')
-
-@bot.message_handler(content_types=['text'])
-def services(message):
-    # bot.send_message(message.chat.id, 'я тут')
-    if message.text == 'Подключенные услуги':
-        all_us_inf = user_search(str(message.from_user.id))
-        aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-        services_parsed = req_payment_parse(aft_inf[1][2])
-        print(services_parsed)
-        bot.send_message(message.from_user.id,
-                         f'Подключенные услуги: \n {str(services_parsed[2])[3: -4]} \n {str(services_parsed[3])[3: -4]} \n {str(services_parsed[4])[3: -4]} \n {str(services_parsed[5])[3: -4]} ')
-
-#@bot.message_handler(content_types=['text'])
-def balance(message):
-    if message.text == 'Текущий баланс':
-        all_us_inf = user_search(str(message.from_user.id))
-        aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-        services_parsed = balance_parse(aft_inf[1][1])
-        print(services_parsed)
-        bot.send_message(message.from_user.id, f'Текущий баланс: {services_parsed} руб.')
-
-#@bot.message_handler(content_types=['text'])
-def plan(message):
-    if message.text == 'Текущий тариф':
-        all_us_inf = user_search(str(message.from_user.id))
-        aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-        services_parsed = tarif_parse(aft_inf[1][0])
-        print(services_parsed)
-        bot.send_message(message.from_user.id, f'Текущий тариф: {services_parsed}')
-
-
-
-
-
-
-@bot.message_handler(commands=['pay'])
-def req_pay(message):
-    all_us_inf = user_search(str(message.from_user.id))
-    aft_inf = login_in(all_us_inf[3], all_us_inf[4])
-    services_parsed = req_payment_ryl(aft_inf[1][0])
-    print(services_parsed)
-    bot.send_message(message.from_user.id, f'Текущий тариф: {services_parsed}')
-
-
-'''
-
-# time.sleep(10)
-# print(message_q)
-# sched.add_job(al(message_q, tr=1), 'interval', seconds=60)
 
 bot.polling()

@@ -72,6 +72,5 @@ def abon_usluga(abon_id):
     return uslugi
 
 
-id = abon_id("BILL0000139")
-print(abon_street(str(id)))
+
 
