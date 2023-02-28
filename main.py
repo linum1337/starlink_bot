@@ -85,7 +85,7 @@ def hello_message(message, another_try=1):
     elif (all_us_inf[0] == False) and (another_try == 1):
         print(message.from_user.id)
         bot.send_message(message.from_user.id, "Добро пожаловать! "
-                                               "Введите ваш логин или номер телефона, чтобы бот Вас узнал. После этого Вы сможете получать от бота уведомления и другую информацию.")
+                                               "Заполните форму авторизации, чтобы бот Вас узнал. После этого Вы сможете получать от бота уведомления и другую информацию.")
         login_msg = bot.send_message(message.chat.id, 'Введите логин:')
         bot.register_next_step_handler(login_msg, login_take)
     elif (all_us_inf[0] == False) and (another_try == 0):
@@ -119,8 +119,6 @@ def final_login(message, pwd_inp, login_take):
         abonent_id = rest_class.abon_id(login_take)
         push_tg = rest_class.tg_id(abonent_id, message.chat.id)
         keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
-        advice = types.KeyboardButton(text='Справка \U0001f4d6')
-        keyboard.add(advice)
         serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
         keyboard.add(serv)
         bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
@@ -154,34 +152,72 @@ def al(message):
         Thread(target=scheduler, args=(login, message,)).start()
         print(1)
 
-    if message.text == 'Справка \U0001f4d6':
-        bot.send_message(message.chat.id,
-                         f'Доступные команды:\n {commands_list[0]} - подключенные услуги \n {commands_list[1]} - справка \n {commands_list[2]} - текущий баланс \n {commands_list[3]} - текущий тариф \n {commands_list[4]}')
-
-
-
-    elif message.text == 'Подключенные услуги \U0001f202\uFE0F':
+    if message.text == 'Подключенные услуги \U0001f202\uFE0F':
         abonent_id = rest_class.abon_id(all_us_inf[3])
         displ = rest_class.abon_usluga(abonent_id)
         print(abonent_id)
         displ = '\n'.join(displ)
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
+        keyboard.add(paln_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
         bot.send_message(message.from_user.id,
-                         f'Подключенные услуги:\n{displ} ')
+                         f'Подключенные услуги:\n{displ} ', reply_markup=keyboard)
         print(all_us_inf[3])
     elif message.text == 'QR':
         qr_generator(all_us_inf)
         photo = open('test1.png', 'rb')
-        bot.send_photo(message.from_user.id, photo)
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
+        keyboard.add(paln_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
+        bot.send_photo(message.from_user.id, photo, reply_markup=keyboard)
     elif message.text == 'Текущий баланс \U0001f4b0':
         abonent_id = rest_class.abon_id(all_us_inf[3])
         displ = rest_class.abon_balance(abonent_id)
-        bot.send_message(message.from_user.id, f'Текущий баланс: {displ} руб.')
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
+        keyboard.add(paln_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
+        bot.send_message(message.from_user.id, f'Текущий баланс: {displ} руб.', reply_markup=keyboard)
 
 
     elif message.text == 'Текущий тариф \U0001f310':
         abonent_id = rest_class.abon_id(all_us_inf[3])
         displ = rest_class.abon_tarif(abonent_id)
-        bot.send_message(message.from_user.id, f'Текущий тариф: {displ}')
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
+        keyboard.add(paln_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
+        bot.send_message(message.from_user.id, f'Текущий тариф: {displ}', reply_markup=keyboard)
 
     elif message.text == 'Выйти из профиля \U0001f6aa':
         delete_user(message.chat.id)
