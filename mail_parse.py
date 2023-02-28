@@ -1,9 +1,13 @@
 import email
 import imaplib
+from email.header import decode_header
+
 import user_bd
-import schedule
+
+
 def mail_parse(login):
     print('Mail parse is here!')
+
     imap_host = 'imap.gmail.com'
     imap_user = 'levokumkabilling1337@gmail.com'
     imap_pass = 'ejketwjlyowpgpgi'
@@ -22,16 +26,20 @@ def mail_parse(login):
     for num in data[0].split():
         tmp, data = imap.fetch(num, '(RFC822)')
         msg = email.message_from_bytes(data[0][1])
-        if str(user_bd.user_search(login)[3]) in msg['subject']:
+        bytes, encoding = decode_header(msg['subject'])[0]
+        fin_subj = bytes.decode(encoding)
+        if login in fin_subj:
             for part in msg.walk():
                 payload = part.get_payload(decode=True)
-                payload_arg.append((payload, msg['subject']))
+                payload_arg.append((payload, fin_subj))
                 imap.store(num, '+FLAGS', '\\Deleted')
-            msg = email.message_from_bytes(data[0][1])
+        msg = email.message_from_bytes(data[0][1])
 
     for i in payload_arg:
-        if str(user_bd.user_search(login)[3]) in i[1] and (i[0] != None) and ('dir' not in i[0].decode('utf-8')):
-            print(i)
+        if login in i[1]:
             fin_mail.append(i)
-    imap.close()
-    return fin_mail
+    if len(fin_mail) != 0:
+        return fin_mail[1][0].decode('utf-8')
+    else:
+        return fin_mail
+

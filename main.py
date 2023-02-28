@@ -1,11 +1,10 @@
 import time
 from threading import Thread
-from apscheduler.schedulers.background import BackgroundScheduler
-import schedule
+
 import telebot
+from apscheduler.schedulers.background import BackgroundScheduler
 from telebot import types
-import asyncio
-from telebot.async_telebot import AsyncTeleBot
+
 import mail_parse
 from parser_selenium import login_form, request_parser
 from qr_generator import qr_generator
@@ -19,6 +18,7 @@ abonent_id = 0
 tr = 0
 import rest_class
 
+
 def scheduler(login, message):
     schedule.every(1).minute.do(mail, login, message)
 
@@ -27,15 +27,17 @@ def scheduler(login, message):
         schedule.run_pending()
         time.sleep(1)
 
-import email
-import imaplib
-import user_bd
+
 import schedule
+
+
 def mail(login, message):
     sms = mail_parse.mail_parse(login)
+    # print(sms)
     if len(sms) != 0:
-        for i in sms:
-            bot.send_message(message.chat.id, 'Новое сообщение:' + i[0].decode('-utf8'))
+        bot.send_message(message.chat.id, 'Новое сообщение:' + '\n' + sms)
+
+
 def help_info(message, all_us_inf):
     all_us_inf = all_us_inf
     print(1)
@@ -67,10 +69,13 @@ def hello_message(message, another_try=1):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
-        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
-        keyboard.add(exit_btn)
+        ring = types.KeyboardButton(text='Включить уведомления \U0001f6ce\uFE0F')
+        keyboard.add(ring)
         qr_btn = types.KeyboardButton(text='QR')
         keyboard.add(qr_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
+
         bot.send_message(message.from_user.id,
                          'Этот бот работает в тестовом режиме, при сбоях писать на почту: osgaming47@gmail.com',
                          reply_markup=keyboard)
@@ -144,15 +149,29 @@ def al(message):
 
     all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
 
-    global tr
-    if tr == 0:
-        login = all_us_inf[3]
-        Thread(target=scheduler, args=(login, message,)).start()
-        tr = 1
-        print(1)
     if message.text == 'Справка \U0001f4d6':
         bot.send_message(message.chat.id,
                          f'Доступные команды:\n {commands_list[0]} - подключенные услуги \n {commands_list[1]} - справка \n {commands_list[2]} - текущий баланс \n {commands_list[3]} - текущий тариф \n {commands_list[4]}')
+    elif message.text == 'Включить уведомления \U0001f6ce\uFE0F':
+        login = all_us_inf[3]
+        Thread(target=scheduler, args=(login, message,)).start()
+        print(1)
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        advice = types.KeyboardButton(text='Справка \U0001f4d6')
+        keyboard.add(advice)
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
+        keyboard.add(paln_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
+        bot.send_message(message.chat.id, 'Уведомления включены!', reply_markup=keyboard)
+
+
     elif message.text == 'Подключенные услуги \U0001f202\uFE0F':
         abonent_id = rest_class.abon_id(all_us_inf[3])
         displ = rest_class.abon_usluga(abonent_id)
@@ -179,9 +198,6 @@ def al(message):
     elif message.text == 'Выйти из профиля \U0001f6aa':
         delete_user(message.chat.id)
         bot.send_message(message.from_user.id, 'Вы вышли из профиля')
-
-
-
 
 
 '''@bot.message_handler(commands=['helpdesk'])
@@ -244,10 +260,8 @@ def req_pay(message):
 
 '''
 
-
-#time.sleep(10)
-#print(message_q)
-#sched.add_job(al(message_q, tr=1), 'interval', seconds=60)
+# time.sleep(10)
+# print(message_q)
+# sched.add_job(al(message_q, tr=1), 'interval', seconds=60)
 
 bot.polling()
-
