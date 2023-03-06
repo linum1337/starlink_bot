@@ -127,6 +127,8 @@ def final_login(message, pwd_inp, login_take):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
         keyboard.add(exit_btn)
         qr_btn = types.KeyboardButton(text='QR')
