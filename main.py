@@ -21,7 +21,8 @@ tr = 0
 
 def scheduler(login, message):
     schedule.every(1).minute.do(mail, login, message)
-
+    global tr
+    tr = 1
     print('Started scheduling')
     while True:
         schedule.run_pending()
@@ -62,7 +63,8 @@ def hello_message(message, another_try=1):
 
     if all_us_inf[0]:  # Проверка на наличие юзера в бд
         login = all_us_inf[3]
-        Thread(target=scheduler, args=(login, message,)).start()
+        if tr == 0:
+            Thread(target=scheduler, args=(login, message,)).start()
         print(1)
         keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
         advice = types.KeyboardButton(text='Справка \U0001f4d6')
@@ -141,8 +143,9 @@ def final_login(message, pwd_inp, login_take):
         global all_us_inf
         all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
         login = all_us_inf[3]
-        Thread(target=scheduler, args=(login, message,)).start()
-        print(1)
+        if tr == 0:
+            Thread(target=scheduler, args=(login, message,)).start()
+            print(1)
 
 
 @bot.message_handler(content_types=['text'])
