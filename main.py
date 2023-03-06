@@ -6,6 +6,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from telebot import types
 
 import mail_parse
+import rest_class
 from parser_selenium import login_form, request_parser
 from qr_generator import qr_generator
 from user_bd import user_add, user_search, delete_user
@@ -16,7 +17,6 @@ commands_list = ['/services', '/help', '/balance', '/plan', '/helpdesk']
 all_us_inf = 0
 abonent_id = 0
 tr = 0
-import rest_class
 
 
 def scheduler(login, message):
@@ -134,7 +134,6 @@ def final_login(message, pwd_inp, login_take):
         bot.send_message(message.from_user.id,
                          'Этот бот работает в тестовом режиме, при сбоях писать на почту: osgaming47@gmail.com',
                          reply_markup=keyboard)
-
 
         soup = request_parser(cookies)
 
