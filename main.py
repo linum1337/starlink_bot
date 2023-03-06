@@ -65,7 +65,6 @@ def hello_message(message, another_try=1):
 
     if all_us_inf[0]:  # Проверка на наличие юзера в бд
         login = all_us_inf[3]
-        Thread(target=scheduler, args=(login, message,)).start()
         keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
         serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
         keyboard.add(serv)
@@ -139,6 +138,7 @@ def final_login(message, pwd_inp, login_take):
         global all_us_inf
         all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
         login = all_us_inf[3]
+        Thread(target=scheduler, args=(login, message,)).start()
 
 @bot.message_handler(content_types=['text'])
 def al(message):
