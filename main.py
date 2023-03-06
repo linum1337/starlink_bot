@@ -36,7 +36,8 @@ def mail(login, message):
     sms = mail_parse.mail_parse(login)
     # print(sms)
     if len(sms) != 0:
-        bot.send_message(message.chat.id, 'Новое сообщение:' + '\n' + sms)
+        for i in sms:
+            bot.send_message(message.chat.id, 'Новое сообщение:' + '\n' + i)
 
 
 def help_info(message, all_us_inf):

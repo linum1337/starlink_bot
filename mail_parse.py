@@ -13,7 +13,7 @@ def mail_parse(login):
     imap_pass = 'ejketwjlyowpgpgi'
     payload_arg = []
     fin_mail = []
-
+    final_stuff = []
     # connect to host using SSL
     imap = imaplib.IMAP4_SSL(imap_host)
 
@@ -31,7 +31,8 @@ def mail_parse(login):
         if login in fin_subj:
             for part in msg.walk():
                 payload = part.get_payload(decode=True)
-                payload_arg.append((payload, fin_subj))
+                if (payload is not None):
+                    payload_arg.append((payload, fin_subj))
                 imap.store(num, '+FLAGS', '\\Deleted')
         msg = email.message_from_bytes(data[0][1])
 
@@ -39,7 +40,13 @@ def mail_parse(login):
         if login in i[1]:
             fin_mail.append(i)
     if len(fin_mail) != 0:
-        return fin_mail[1][0].decode('utf-8')
+        for i in fin_mail:
+            if '<div' not in str(i[0]):
+                final_stuff.append(i[0].decode('utf-8'))
+
+
+        return final_stuff
     else:
         return fin_mail
 
+#print(mail_parse('BILL0000139'))
