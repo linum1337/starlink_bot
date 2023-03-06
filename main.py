@@ -1,3 +1,4 @@
+import threading
 import time
 from threading import Thread
 
@@ -38,7 +39,8 @@ def mail(login, message):
     # print(sms)
     if len(sms) != 0:
         for i in sms:
-            bot.send_message(message.chat.id, 'Новое сообщение:' + '\n' + i)
+            if 'Интернет доступ' not in i:
+                bot.send_message(message.chat.id, 'Новое сообщение:' + '\n' + i)
 
 
 def help_info(message, all_us_inf):
@@ -63,20 +65,14 @@ def hello_message(message, another_try=1):
 
     if all_us_inf[0]:  # Проверка на наличие юзера в бд
         login = all_us_inf[3]
-        if tr == 0:
-            Thread(target=scheduler, args=(login, message,)).start()
-        print(1)
+        Thread(target=scheduler, args=(login, message,)).start()
         keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
-        advice = types.KeyboardButton(text='Справка \U0001f4d6')
-        keyboard.add(advice)
         serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
         keyboard.add(serv)
         bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
-        ring = types.KeyboardButton(text='Включить уведомления \U0001f6ce\uFE0F')
-        keyboard.add(ring)
         qr_btn = types.KeyboardButton(text='QR')
         keyboard.add(qr_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
@@ -143,10 +139,6 @@ def final_login(message, pwd_inp, login_take):
         global all_us_inf
         all_us_inf = user_search(str(message.from_user.id))  # Сохранение данных юзера из бд
         login = all_us_inf[3]
-        if tr == 0:
-            Thread(target=scheduler, args=(login, message,)).start()
-            print(1)
-
 
 @bot.message_handler(content_types=['text'])
 def al(message):
