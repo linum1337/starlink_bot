@@ -72,6 +72,8 @@ def hello_message(message, another_try=1):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
         keyboard.add(qr_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
@@ -160,6 +162,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
         keyboard.add(qr_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
@@ -167,6 +171,31 @@ def al(message):
         bot.send_message(message.from_user.id,
                          f'Подключенные услуги:\n{displ} ', reply_markup=keyboard)
         print(all_us_inf[3])
+    elif message.text == 'Как оплатить? \U0001F4B0':
+        video = open('WhatsApp Video 2023-03-06 at 14.51.32.mp4', 'rb')
+        bot.send_message(message.chat.id, f'Сбербанк онлайн:\n'
+                         f'в платежах выбрать раздел Дом - Интернет, ТВ, домашний телефон.'
+                         f' В поиске выбрать  "ООО "Старлинк Кантри" и ввести номер вашего  договора {all_us_inf[3]} '
+                         f'После оплаты здесь чек не нужен, денежные средства сразу зачисляются на ваш абонентский счёт.')
+
+        bot.send_video(message.chat.id, video)
+        bot.send_message(message.chat.id, f'Личный кабинет:\n'
+                                          f'Для оплаты через личный кабинет авторизуйтесь на сайте https://cabinet.levokumka.net '
+                                          f'используя ваш логин: {all_us_inf[3]} и пароль: {all_us_inf[4]}\n'
+                                          f'Перейдите во вкладку "Пополнение счета", укажите нужную сумму, почтовый ящик и нажмите оплатить, после чего вас перенаправит на защищенную страницу банка.')
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
+        keyboard.add(paln_btn)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
     elif message.text == 'QR':
         qr_generator(all_us_inf)
         photo = open('test1.png', 'rb')
@@ -177,6 +206,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
         keyboard.add(qr_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
@@ -192,6 +223,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
         keyboard.add(qr_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
@@ -209,6 +242,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
         keyboard.add(qr_btn)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
