@@ -1,4 +1,5 @@
 import threading
+
 import time
 from threading import Thread
 
@@ -8,7 +9,7 @@ from telebot import types
 
 import mail_parse
 import rest_class
-from parser_selenium import login_form, request_parser
+from parser_selenium import login_form, request_parser, crm_selenium
 from qr_generator import qr_generator
 from user_bd import user_add, user_search, delete_user
 
@@ -72,6 +73,8 @@ def hello_message(message, another_try=1):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
         pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
         keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
@@ -127,6 +130,8 @@ def final_login(message, pwd_inp, login_take):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
         pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
         keyboard.add(pay)
         exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
@@ -164,6 +169,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
         pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
         keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
@@ -182,6 +189,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
         pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
         keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
@@ -209,6 +218,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
         pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
         keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
@@ -226,6 +237,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
         pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
         keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
@@ -245,6 +258,8 @@ def al(message):
         keyboard.add(bill)
         paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
         keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
         pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
         keyboard.add(pay)
         qr_btn = types.KeyboardButton(text='QR')
@@ -256,6 +271,36 @@ def al(message):
     elif message.text == 'Выйти из профиля \U0001f6aa':
         delete_user(message.chat.id)
         bot.send_message(message.from_user.id, 'Вы вышли из профиля')
+
+    elif message.text == 'Запрос в тех. поддержку \U0001f477':
+        subj_ask = bot.send_message(message.chat.id, 'Введите тему запроса:')
+        bot.register_next_step_handler(subj_ask, subj)
+
+def subj(message):
+    subj_crm = message.text
+    mes = bot.send_message(message.chat.id, 'Расскажите о своей проблеме:')
+    bot.register_next_step_handler(mes, mes_ask, subj_crm)
+
+def mes_ask(message, subj_crm):
+    mes = message.text
+    print(all_us_inf[3], all_us_inf[4])
+    if crm_selenium(all_us_inf[3], all_us_inf[4], str(subj_crm), str(mes)):
+        keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_keyboard=True)
+        serv = types.KeyboardButton(text='Подключенные услуги \U0001f202\uFE0F')
+        keyboard.add(serv)
+        bill = types.KeyboardButton(text='Текущий баланс \U0001f4b0')
+        keyboard.add(bill)
+        paln_btn = types.KeyboardButton(text='Текущий тариф \U0001f310')
+        keyboard.add(paln_btn)
+        crm = types.KeyboardButton(text='Запрос в тех. поддержку \U0001f477')
+        keyboard.add(crm)
+        pay = types.KeyboardButton(text='Как оплатить? \U0001F4B0')
+        keyboard.add(pay)
+        exit_btn = types.KeyboardButton(text='Выйти из профиля \U0001f6aa')
+        keyboard.add(exit_btn)
+        qr_btn = types.KeyboardButton(text='QR')
+        keyboard.add(qr_btn)
+        bot.send_message(message.chat.id, 'Запрос успешно отправлен', reply_markup=keyboard)
 
 
 bot.polling()

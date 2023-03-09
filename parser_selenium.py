@@ -74,6 +74,49 @@ def request_parser(cookies):  #Преобразование полученых �
     soup_services = BeautifulSoup(services.text, 'lxml')
     return soup_main, soup_bill, soup_services      #Возвращение преобразованных страниц
 
+def crm_selenium(login, pwd, subj, mes):
+    log = str(login)
+    pas = str(pwd)
+    options = webdriver.ChromeOptions()
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    options.add_argument("user-agent=Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0")
+    url = "https://www.cabinet.levokumka.net/cabinet/"
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+    try:
+
+        driver.get(url=url)
+        driver.set_window_size(1439, 818)
+        driver.find_element(By.ID, "pass-field").send_keys(pas)
+        driver.find_element(By.ID, "login-field").send_keys(log)
+        driver.find_element(By.ID, "pass-field").send_keys(Keys.ENTER)
+
+        time.sleep(2)
+        driver.find_element(By.CSS_SELECTOR, ".col-xs-15:nth-child(1)").click()
+        time.sleep(1)
+        driver.find_element(By.ID, "subject").click()
+        driver.find_element(By.ID, "subject").send_keys(subj)
+
+        driver.find_element(By.ID, "message_helpdesk").click()
+        driver.find_element(By.ID, "message_helpdesk").send_keys(mes)
+        driver.find_element(By.CSS_SELECTOR, ".modal-footer > .btn-primary").click()
+        time.sleep(1)
+        cookies = driver.get_cookies()
+        # request_parser(cookies)
+        return True
+        # time.sleep(5)
+
+
+    except:
+        return 0
+
+    finally:
+        driver.close()
+        driver.quit()
 def tarif_parse(soup): #Получение текущего тарифа
 
     a = soup.findAll('h4')
@@ -148,4 +191,3 @@ def helpdesk_sender(cookies):
         driver.quit()
 
     return True
-#login_form('BILL0000139', '5ormvx')
